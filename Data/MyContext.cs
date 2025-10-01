@@ -10,6 +10,8 @@ namespace VideoLesson.Data
 
         }
         public DbSet<Users> Users { get; set; }
+        public DbSet<Videos> Videos { get; set; }
+        public DbSet<Courses> Courses { get; set; }
         
         
        

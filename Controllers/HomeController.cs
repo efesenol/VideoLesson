@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using VideoLesson.Data;
+using VideoLesson.Entities;
 using VideoLesson.Models;
 
 namespace VideoLesson.Controllers;
@@ -18,9 +20,25 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        var viewModel = new ViewModel();
-        viewModel.User = _context.Users.ToList();
-        return View(viewModel);
+        var appointment = _context.Courses
+        .Where(vm => vm.IsActive == true && vm.IsDelete == false)
+        .Select(vm => new VideoCourseViewModel
+        {
+            CourseId = vm.Id,
+            CourseTitle = vm.Title,
+            CourseDescription = vm.Description,
+            CourseLanguage = vm.Language,
+            CourseThumbnailUrl = vm.Img,
+            CourseTotalDuration = vm.TotalDuration,
+
+            VideoId = vm.videos!.Id,
+            VideoDescription = vm.videos.Description,
+            VideoDuration = vm.videos.DurationInSeconds,
+            VideoOrder = vm.videos.Order,
+            VideoTitle = vm.videos.Title
+        })
+        .ToList();
+        return View(appointment);
     }
 
     public IActionResult Privacy()
